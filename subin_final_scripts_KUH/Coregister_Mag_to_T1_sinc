@@ -1,0 +1,30 @@
+#!/bin/bash
+
+dir_in_mag=/home/subin/Desktop/subin/subindata_KUH/2_New_210331/2_qsm_mag_2nd_echo_1iso
+dir_in_t1=/home/subin/Desktop/subin/subindata_KUH/2_New_210331/3_1_t1_isonii_fsspace_copied
+dir_out=/home/subin/Desktop/subin/subindata_KUH/2_New_210331/5_2_uzip_ro_ud_QSMnet_files_T1coreg_tri
+
+dir_in_qsm=/home/subin/Desktop/subin/subindata_KUH/2_New_210331/5_1_uzip_ro_ud_QSMnet_files
+dilatenum=1
+erodenum=2
+
+
+for subj in BBB_01
+
+
+
+	do
+	fname_in_mag=$dir_in_mag/$subj"_QSM_mag_e2_1iso.nii"
+	fname_in_t1=$dir_in_t1/$subj"_isoT1_fs.nii"
+	fname_reg=$dir_out/"sinc_mag2T1_"$subj
+
+	# Make Mag-to-T1 coreg parameter
+	flirt -in $fname_in_mag -ref $fname_in_t1 -out $fname_reg -omat $fname_reg.mat -bins 256 -cost normmi -searchrx -90 90 -searchry -90 90 -searchrz -90 90 -dof 6 -interp sinc -sincwidth 7 -sincwindow hanning
+
+	fname_in_qsmnet=$dir_in_qsm/$subj"_QSMnet+_64_25_fswmparc_dilated"$dilatenum"_eroded"$erodenum"_ro_ud_zp.nii"
+	fname_out_t1coregqsmnet=$dir_out/"sinc_mag2T1_"$subj"_QSMnet+_64_25_fswmparc_dilated"$dilatenum"_eroded"$erodenum"_ro_ud_zp"
+
+	# Coregister QSMnet+ output to T1 using above parameter:
+	flirt -in $fname_in_qsmnet -ref $fname_in_t1 -out $fname_out_t1coregqsmnet -applyxfm -init $fname_reg.mat -interp sinc -sincwidth 7 -sincwindow hanning
+
+done
