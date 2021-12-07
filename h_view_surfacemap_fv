@@ -1,0 +1,89 @@
+#!/bin/bash
+
+SUBJECTS_DIR=/media/imgdb_mnt/Personal/SUBIN/LIST/LaminarQSM
+subjavg_dir=/media/imgdb_mnt/Personal/SUBIN/LIST/LaminarQSM/Surface_Maps/SubjAvgs
+subjeach_dir=/media/imgdb_mnt/Personal/SUBIN/LIST/LaminarQSM/Surface_Maps
+
+h=lh 
+
+depthctx5='0.5'
+depthctx7='0.7'
+depthctx10='1.0'
+depthwm1="0.1"
+depthwm3="0.3"
+depthwm5="0.5"
+#----Average surface map-----------------------------------------------------------------
+tksurferfv fsaverage $h inflated -aparc \
+	-overlay $subjavg_dir/"subjavg_cosmos_"$h"_SWMfrac-"$depthwm1.mgh \
+	-overlay $subjavg_dir/"subjavg_cosmos_"$h"_SWMfrac-"$depthwm3.mgh \
+	-overlay $subjavg_dir/"subjavg_cosmos_"$h"_SWMfrac-"$depthwm5.mgh \
+	-overlay $subjavg_dir/"subjavg_cosmos_"$h"_"$depthctx5.mgh \
+	-overlay $subjavg_dir/"subjavg_cosmos_"$h"_"$depthctx7.mgh \
+	-overlay $subjavg_dir/"subjavg_cosmos_"$h"_"$depthctx10.mgh \
+	-overlay $subjavg_dir/"subjavg_xp_"$h"_SWMfrac-"$depthwm1.mgh \
+	-overlay $subjavg_dir/"subjavg_xp_"$h"_SWMfrac-"$depthwm3.mgh \
+	-overlay $subjavg_dir/"subjavg_xp_"$h"_SWMfrac-"$depthwm5.mgh \
+	-overlay $subjavg_dir/"subjavg_xp_"$h"_"$depthctx5.mgh \
+	-overlay $subjavg_dir/"subjavg_xp_"$h"_"$depthctx7.mgh \
+	-overlay $subjavg_dir/"subjavg_xp_"$h"_"$depthctx10.mgh \
+	-overlay $subjavg_dir/"subjavg_xn_"$h"_SWMfrac-"$depthwm1.mgh \
+	-overlay $subjavg_dir/"subjavg_xn_"$h"_SWMfrac-"$depthwm3.mgh \
+	-overlay $subjavg_dir/"subjavg_xn_"$h"_SWMfrac-"$depthwm5.mgh \
+	-overlay $subjavg_dir/"subjavg_xn_"$h"_"$depthctx5.mgh \
+	-overlay $subjavg_dir/"subjavg_xn_"$h"_"$depthctx7.mgh \
+	-overlay $subjavg_dir/"subjavg_xn_"$h"_"$depthctx10.mgh \
+	-overlay $subjavg_dir/"subjavg_r2star_"$h"_"$depthctx5.mgh \
+	-overlay $subjavg_dir/"subjavg_r2star_"$h"_"$depthctx7.mgh \
+	-overlay $subjavg_dir/"subjavg_r2star_"$h"_"$depthctx10.mgh \
+	-overlay $subjavg_dir/"subjavg_r2star_"$h"_SWMfrac-"$depthwm1.mgh \
+	-overlay $subjavg_dir/"subjavg_r2star_"$h"_SWMfrac-"$depthwm3.mgh \
+	-overlay $subjavg_dir/"subjavg_r2star_"$h"_SWMfrac-"$depthwm5.mgh 
+
+#----Individual surface map-----------------------------------------------------------------
+subject="coregR2S_subj3"
+
+tksurferfv fsaverage $h inflated -aparc \
+	-overlay $subjavg_dir/"fsaverage_"$subject.cosmos.$h."equi_intensity_"$depthctx5.mgh \
+	-overlay $subjavg_dir/"fsaverage_"$subject.cosmos.$h."equi_intensity_"$depthctx7.mgh \
+	-overlay $subjavg_dir/"fsaverage_"$subject.cosmos.$h."equi_intensity_"$depthctx10.mgh \
+	-overlay $subjavg_dir/"fsaverage_"$subject.cosmos.$h."SWMfrac-"$depthwm1.mgh \
+	-overlay $subjavg_dir/"fsaverage_"$subject.cosmos.$h."SWMfrac-"$depthwm3.mgh \
+	-overlay $subjavg_dir/"fsaverage_"$subject.cosmos.$h."SWMfrac-"$depthwm5.mgh \
+	-overlay $subjavg_dir/"fsaverage_"$subject.xp.$h."equi_intensity_"$depthctx5.mgh \
+	-overlay $subjavg_dir/"fsaverage_"$subject.xp.$h."equi_intensity_"$depthctx7.mgh \
+	-overlay $subjavg_dir/"fsaverage_"$subject.xp.$h."equi_intensity_"$depthctx10.mgh \
+	-overlay $subjavg_dir/"fsaverage_"$subject.xp.$h."SWMfrac-"$depthwm1.mgh \
+	-overlay $subjavg_dir/"fsaverage_"$subject.xp.$h."SWMfrac-"$depthwm3.mgh \
+	-overlay $subjavg_dir/"fsaverage_"$subject.xp.$h."SWMfrac-"$depthwm5.mgh \
+	-overlay $subjavg_dir/"fsaverage_"$subject.xn.$h."equi_intensity_"$depthctx5.mgh \
+	-overlay $subjavg_dir/"fsaverage_"$subject.xn.$h."equi_intensity_"$depthctx7.mgh \
+	-overlay $subjavg_dir/"fsaverage_"$subject.xn.$h."equi_intensity_"$depthctx10.mgh \
+	-overlay $subjavg_dir/"fsaverage_"$subject.xn.$h"_SWMfrac-"$depthwm1.mgh \
+	-overlay $subjavg_dir/"fsaverage_"$subject.xn.$h"_SWMfrac-"$depthwm3.mgh \
+	-overlay $subjavg_dir/"fsaverage_"$subject.xn.$h"_SWMfrac-"$depthwm5.mgh \
+	-overlay $subjavg_dir/"fsaverage_"$subject.r2star.$h."equi_intensity_"$depthctx5.mgh \
+	-overlay $subjavg_dir/"fsaverage_"$subject.r2star.$h."equi_intensity_"$depthctx7.mgh \
+	-overlay $subjavg_dir/"fsaverage_"$subject.r2star.$h."equi_intensity_"$depthctx10.mgh \
+	-overlay $subjavg_dir/"fsaverage_"$subject.r2star.$h"_SWMfrac-"$depthwm1.mgh \
+	-overlay $subjavg_dir/"fsaverage_"$subject.r2star.$h"_SWMfrac-"$depthwm3.mgh \
+	-overlay $subjavg_dir/"fsaverage_"$subject.r2star.$h"_SWMfrac-"$depthwm5.mgh 
+	-overlay $subjavg_dir/"fsaverage_"$subject.xsepnet_r2s_pos.$h."equi_intensity_"$depthctx5.mgh \
+	-overlay $subjavg_dir/"fsaverage_"$subject.xsepnet_r2s_pos.$h."equi_intensity_"$depthctx7.mgh \
+	-overlay $subjavg_dir/"fsaverage_"$subject.xsepnet_r2s_pos.$h."equi_intensity_"$depthctx10.mgh \
+	-overlay $subjavg_dir/"fsaverage_"$subject.xsepnet_r2s_pos.$h"_SWMfrac-"$depthwm1.mgh \
+	-overlay $subjavg_dir/"fsaverage_"$subject.xsepnet_r2s_pos.$h"_SWMfrac-"$depthwm3.mgh \
+	-overlay $subjavg_dir/"fsaverage_"$subject.xsepnet_r2s_pos.$h"_SWMfrac-"$depthwm5.mgh \
+	-overlay $subjavg_dir/"fsaverage_"$subject.xsepnet_r2s_neg.$h."equi_intensity_"$depthctx5.mgh \
+	-overlay $subjavg_dir/"fsaverage_"$subject.xsepnet_r2s_neg.$h."equi_intensity_"$depthctx7.mgh \
+	-overlay $subjavg_dir/"fsaverage_"$subject.xsepnet_r2s_neg.$h."equi_intensity_"$depthctx10.mgh \
+	-overlay $subjavg_dir/"fsaverage_"$subject.xsepnet_r2s_neg.$h"_SWMfrac-"$depthwm1.mgh \
+	-overlay $subjavg_dir/"fsaverage_"$subject.xsepnet_r2s_neg.$h"_SWMfrac-"$depthwm3.mgh \
+	-overlay $subjavg_dir/"fsaverage_"$subject.xsepnet_r2s_neg.$h"_SWMfrac-"$depthwm5.mgh 
+
+#tksurferfv "coregR2S_"$subj $h inflated -aparc \
+#	-overlay $subjfolder/surface_outputs_01_interp-trilinear/$subj"_SWM_"$h"_cosmos_frac-"$depthwm.mgh \
+#	-overlay $subjfolder/surface_outputs_01_interp-trilinear/$subj"_SWM_"$h"_xp_frac-"$depthwm.mgh \
+#	-overlay $subjfolder/surface_outputs_01_interp-trilinear/$subj"_SWM_"$h"_xn_frac-"$depthwm.mgh \
+#	-overlay $subjfolder/surface_outputs_01_interp-trilinear/"cosmos.$h.equi_intensity_"$depthctx.mgh \
+#	-overlay $subjfolder/surface_outputs_01_interp-trilinear/"xp.$h.equi_intensity_"$depthctx.mgh \
+#	-overlay $subjfolder/surface_outputs_01_interp-trilinear/"xn.$h.equi_intensity_"$depthctx.mgh 

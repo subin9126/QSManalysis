@@ -1,0 +1,101 @@
+#!/bin/bash
+# This Script is to make surface maps at chosen cortical depths, subject-averaged.
+
+SUBJECTS_DIR=/media/imgdb_mnt/Personal/SUBIN/LIST/LaminarQSM
+h=lh #lh or rh
+out_dir=/media/imgdb_mnt/Personal/SUBIN/LIST/LaminarQSM/Surface_Maps
+
+for subj in subj3 #subj4_TX #subj1 subj2 subj3 subj4_TX subj5 
+do
+
+	subjfolder="coregR2S_"$subj
+
+	# 1. Make fsaverage --> subject registration file:
+	#    Obtain this from vol2vol registration
+	#    --s prints name of subj in output reg file.
+	#    --reg flag: in presence of --regheader flag, --reg specifies output reg filename.
+#	tkregister2 \
+#		--mov $SUBJECTS_DIR/$subjfolder/mri/orig.mgz \
+#		--targ $SUBJECTS_DIR/fsaverage/mri/orig.mgz \
+#		--s $subjfolder --regheader --reg $out_dir/reg.to_fsaverage.$subjfolder.dat \
+		
+
+
+	# 2. Map subj surface to fsaverage using registration file.
+	#    Also smooth.
+	for mod in xsepnet_r2s_pos xsepnet_r2s_neg #r2star #cosmos xp xn r2star
+	do
+		for depthctx in 1.0 0.5 0.7
+		do
+			mri_surf2surf \
+				--hemi $h --fwhm 6 \
+				--srcsubject $subjfolder \
+				--trgsubject fsaverage \
+				--reg $out_dir/reg.to_fsaverage.$subjfolder.dat \
+				--sval $SUBJECTS_DIR/$subjfolder/surface_outputs_01_interp-trilinear/$mod.$h.equi_intensity_$depthctx.mgh \
+				--tval $out_dir/fsaverage_$subjfolder.$mod.$h.equi_intensity_$depthctx.mgh
+ 		done
+		for depthwm in 0.1 0.3 0.5
+		do
+			mri_surf2surf \
+				--hemi $h --fwhm 6 \
+				--srcsubject $subjfolder \
+				--trgsubject fsaverage \
+				--reg $out_dir/reg.to_fsaverage.$subjfolder.dat \
+				--sval $SUBJECTS_DIR/$subjfolder/surface_outputs_01_interp-trilinear/$subj"_SWM_"$h"_"$mod"_frac-"$depthwm.mgh \
+				--tval $out_dir/fsaverage_$subjfolder.$mod.$h.SWMfrac-$depthwm.mgh
+		done
+
+	done
+
+done
+
+# To compute average values of the subjects, maybe should do so on matlab.
+# load the mgh files for each depth and mod, then simply average the values and then save.
+# ---> Run 'Average_fsspace_surfacemaps.m'
+
+
+
+######################Below is just previous work, no longer need to look at ####################################################################################
+#Resample to fsaverage
+#mris_preproc --s coregR2S_subj1 --s coregR2S_subj2 --s coregR2S_subj3 --s coregR2S_subj5 \
+#	--target fsaverage \
+#	--hemi $h \
+#	--meas thickness \
+#	--out $out_dir/subjavg.$h.thick.mgh
+
+# Make registration file
+# (maps from trg (fsaveage space) to src (subject space), which will be contrary to what is expected)
+# also, doing tkregister seems to automatically link to using tkregister2 instead.
+
+#cd $SUBJECTS_DIR
+#tkregister2 --mov ${SUBJECTS_DIR}/coregR2S_subj1/mri/orig.mgz --targ /media/ws1/DATA/LIST/LaminarQSM/freesurfer/subjects/fsaverage/mri/orig.mgz --reg reg_subj1_to_fsaverage.dat
+
+#tkregister2 --mov ${SUBJECTS_DIR}/coregR2S_subj1/mri/orig.mgz --targ  ${SUBJECTS_DIR}/coregR2S_subj1/mri/orig.mgz --reg reg_subj1_to_fsaverage.dat
+
+#mri_surf2surf --srcsubject coregR2S_subj2 --trgsubject fsaverage --sval thickness --src_type curv --cortex --tval /media/imgdb_mnt/Personal/SUBIN/LIST/LaminarQSM/Surface_Maps/register_subj2_to_fsaverage.mgz --hemi lh 
+
+#mri_surf2surf --srcsubject coregR2S_subj2 --trgsubject fsaverage --sval /mri/orig.mgz --tval /media/imgdb_mnt/Personal/SUBIN/LIST/LaminarQSM/Surface_Maps/register_subj2_to_fsaverage.mgz --hemi lh 
+
+#mri_vol2vol --mov coregR2S_subj1/mri/orig.mgz --mni152reg --o $out_dir/reg_to_mni152_coregR2S_subj1.mgz  --save-reg
+
+# --s prints name of subj in output reg file.
+# --reg flag: in presence of --regheader flag, --reg specifies output reg filename.
+#tkregister2 --mov ${SUBJECTS_DIR}/coregR2S_subj1/mri/orig.mgz --targ $SUBJECTS_DIR/fsaverage/mri/orig.mgz --s coregR2S_subj1 --regheader --reg $out_dir/reg.to_fsaverage.coregR2S_subj1.dat
+
+
+#Smooth
+#mri_surf2surf --hemi $h --fwhm 6 --srcsubject coregR2S_subj1 --trgsubject fsaverage --reg $SUBJECTS_DIR/Surface_Maps/reg.to_fsaverage.coregR2S_subj1.dat --sval coregR2S_subj1/surface_outputs_01_interp-trilinear/xp.lh.equi_intensity_0.5.mgh --tval $out_dir/fsaverage_coregR2S_subj1.xp.lh.equi_intensity_0.5.mgh
+
+
+#subjfolder=$SUBJECTS_DIR/$subj
+#
+#mri_surf2surf \
+#	--hemi $h \
+#	--fwhm 6 \
+#	--srcsubject coregR2S_subj1 \
+#	--trgsubject fsaverage \
+#	--reg $subjfolder/register.dat \
+#	--sval $subjfolder/surface_outputs_01_interp-trilinear/  \
+#	--tval .....
+

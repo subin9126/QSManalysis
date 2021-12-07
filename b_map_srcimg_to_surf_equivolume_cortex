@@ -1,0 +1,111 @@
+#!/bin/bash
+# This Script is to extract intensities of specified src_image at vertex points in the equivolume surfaces. 
+#
+# Changed num_surfs from 5 (defalut as copied from github) to 11.
+# Save these 0.1-spaced files in surface_outputs_01 folder. 
+
+SUBJECTS_DIR=/media/imgdb_mnt/Personal/SUBIN/LIST/LaminarQSM
+
+cd /media/ws1/DATA/LIST/LaminarQSM/scripts/surface_tools/equivolumetric_surfaces
+
+
+for subj in subj3 #subj1 subj2 subj3 subj5 # subj5 SUBJ4_tx
+do
+	subjfs="coregR2S_"$subj	
+	out_dir=$SUBJECTS_DIR/$subjfs/surface_outputs_01
+	# if SRC_image is trilinear, will be automatically changed to surface_outputs_01_interp-trilinear
+
+	for mod in xsepnet_r2s_neg xsepnet_r2s_pos #r2star #manualROIedit4 #manualROIedit2 #cosmos xp xn #slice138 #slice112_enlarged slice133 # wmparcvs cosmos 
+
+	do
+		if [[ $mod = "T1" ]]; then
+			src_image=$SUBJECTS_DIR/$subjfs"_T1".nii
+			intmethod="trilinear"
+			out_dir=$SUBJECTS_DIR/$subjfs/surface_outputs_01_interp-trilinear
+
+		elif [[ $mod = "wmparcvs" ]]; then
+			src_image=$SUBJECTS_DIR/$subjfs"_wmparc-vsharpmasked".nii
+			intmethod="nearest"
+
+		elif [[ $mod = "wmparc" ]]; then
+			src_image=$SUBJECTS_DIR/$subjfs/mri/wmparc.mgz
+			intmethod="nearest"
+
+		elif [[ $mod = "manualROI" ]]; then
+			src_image=$SUBJECTS_DIR//manual_ROI_masks/$subjfs"_manualROI".nii
+			intmethod="nearest"
+		elif [[ $mod = "manualROIedit2" ]]; then
+			src_image=$SUBJECTS_DIR//manual_ROI_masks/$subjfs"_manualROIedit2".nii
+			intmethod="nearest"
+		elif [[ $mod = "manualROIedit3" ]]; then
+			src_image=$SUBJECTS_DIR/manual_ROI_masks/further_edited_insular/$subjfs"_manualROIedit3".nii
+			intmethod="nearest"
+		elif [[ $mod = "manualROIedit4" ]]; then
+			src_image=$SUBJECTS_DIR/manual_ROI_masks/further_edited_for_figure/$subjfs"_manualROIedit4".nii
+			intmethod="nearest"
+
+
+		elif [[ $mod = "cosmos" ]]; then
+			src_image=$SUBJECTS_DIR/$subj"_cosmos_ro-os".nii
+			intmethod="trilinear"
+			out_dir=$SUBJECTS_DIR/$subjfs/surface_outputs_01_interp-trilinear
+
+		elif [[ $mod = "xp" ]]; then
+			src_image=$SUBJECTS_DIR/$subj"_xp-cosmos-edit_ro-os".nii
+			intmethod="trilinear"
+			out_dir=$SUBJECTS_DIR/$subjfs/surface_outputs_01_interp-trilinear
+
+		elif [[ $mod = "xn" ]]; then
+			src_image=$SUBJECTS_DIR/$subj"_xn-cosmos-edit_ro-os".nii
+			intmethod="trilinear"
+			out_dir=$SUBJECTS_DIR/$subjfs/surface_outputs_01_interp-trilinear
+
+		elif [[ $mod = "r2star" ]]; then
+			src_image=$SUBJECTS_DIR/$subj"_r2star_ro-os".nii
+			intmethod="trilinear"
+			out_dir=$SUBJECTS_DIR/$subjfs/surface_outputs_01_interp-trilinear
+
+		elif [[ $mod = "xsepnet_r2s_pos" ]]; then
+			src_image=$SUBJECTS_DIR/xsepnet_data/"testsubj_xsepnet_r2s_pred-xpos".nii
+			intmethod="trilinear"
+			out_dir=$SUBJECTS_DIR/$subjfs/surface_outputs_01_interp-trilinear
+		elif [[ $mod = "xsepnet_r2s_neg" ]]; then
+			src_image=$SUBJECTS_DIR/xsepnet_data/"testsubj_xsepnet_r2s_pred-xneg".nii
+			intmethod="trilinear"
+			out_dir=$SUBJECTS_DIR/$subjfs/surface_outputs_01_interp-trilinear
+
+	else
+		break
+	fi
+
+	h="lh"    
+	python ./generate_equivolumetric_surfaces.py --smoothing 0 $SUBJECTS_DIR/$subjfs/surf/$h.pial $SUBJECTS_DIR/$subjfs/surf/$h.white 11 $h.equi --software freesurfer --subject_id $subjfs
+
+	mri_vol2surf --src $src_image --out $out_dir/$mod.$h.equi_intensity_0.0.mgh --hemi $h --surf equi0.0.pial --out_type mgh --regheader $subjfs --interp $intmethod
+	mri_vol2surf --src $src_image --out $out_dir/$mod.$h.equi_intensity_0.1.mgh --hemi $h --surf equi0.1.pial --out_type mgh --regheader $subjfs --interp $intmethod
+	mri_vol2surf --src $src_image --out $out_dir/$mod.$h.equi_intensity_0.2.mgh --hemi $h --surf equi0.2.pial --out_type mgh --regheader $subjfs --interp $intmethod
+	mri_vol2surf --src $src_image --out $out_dir/$mod.$h.equi_intensity_0.3.mgh --hemi $h --surf equi0.3.pial --out_type mgh --regheader $subjfs --interp $intmethod
+	mri_vol2surf --src $src_image --out $out_dir/$mod.$h.equi_intensity_0.4.mgh --hemi $h --surf equi0.4.pial --out_type mgh --regheader $subjfs --interp $intmethod
+	mri_vol2surf --src $src_image --out $out_dir/$mod.$h.equi_intensity_0.5.mgh --hemi $h --surf equi0.5.pial --out_type mgh --regheader $subjfs --interp $intmethod
+	mri_vol2surf --src $src_image --out $out_dir/$mod.$h.equi_intensity_0.6.mgh --hemi $h --surf equi0.6.pial --out_type mgh --regheader $subjfs --interp $intmethod
+	mri_vol2surf --src $src_image --out $out_dir/$mod.$h.equi_intensity_0.7.mgh --hemi $h --surf equi0.7.pial --out_type mgh --regheader $subjfs --interp $intmethod
+	mri_vol2surf --src $src_image --out $out_dir/$mod.$h.equi_intensity_0.8.mgh --hemi $h --surf equi0.8.pial --out_type mgh --regheader $subjfs --interp $intmethod
+	mri_vol2surf --src $src_image --out $out_dir/$mod.$h.equi_intensity_0.9.mgh --hemi $h --surf equi0.9.pial --out_type mgh --regheader $subjfs --interp $intmethod
+	mri_vol2surf --src $src_image --out $out_dir/$mod.$h.equi_intensity_1.0.mgh --hemi $h --surf equi1.0.pial --out_type mgh --regheader $subjfs --interp $intmethod
+
+	h="rh" 
+	python ./generate_equivolumetric_surfaces.py --smoothing 0 $SUBJECTS_DIR/$subjfs/surf/$h.pial $SUBJECTS_DIR/$subjfs/surf/$h.white 11 $h.equi --software freesurfer --subject_id $subjfs
+
+	mri_vol2surf --src $src_image --out $out_dir/$mod.$h.equi_intensity_0.0.mgh --hemi $h --surf equi0.0.pial --out_type mgh --regheader $subjfs --interp $intmethod
+	mri_vol2surf --src $src_image --out $out_dir/$mod.$h.equi_intensity_0.1.mgh --hemi $h --surf equi0.1.pial --out_type mgh --regheader $subjfs --interp $intmethod
+	mri_vol2surf --src $src_image --out $out_dir/$mod.$h.equi_intensity_0.2.mgh --hemi $h --surf equi0.2.pial --out_type mgh --regheader $subjfs --interp $intmethod
+	mri_vol2surf --src $src_image --out $out_dir/$mod.$h.equi_intensity_0.3.mgh --hemi $h --surf equi0.3.pial --out_type mgh --regheader $subjfs --interp $intmethod
+	mri_vol2surf --src $src_image --out $out_dir/$mod.$h.equi_intensity_0.4.mgh --hemi $h --surf equi0.4.pial --out_type mgh --regheader $subjfs --interp $intmethod
+	mri_vol2surf --src $src_image --out $out_dir/$mod.$h.equi_intensity_0.5.mgh --hemi $h --surf equi0.5.pial --out_type mgh --regheader $subjfs --interp $intmethod
+	mri_vol2surf --src $src_image --out $out_dir/$mod.$h.equi_intensity_0.6.mgh --hemi $h --surf equi0.6.pial --out_type mgh --regheader $subjfs --interp $intmethod
+	mri_vol2surf --src $src_image --out $out_dir/$mod.$h.equi_intensity_0.7.mgh --hemi $h --surf equi0.7.pial --out_type mgh --regheader $subjfs --interp $intmethod
+	mri_vol2surf --src $src_image --out $out_dir/$mod.$h.equi_intensity_0.8.mgh --hemi $h --surf equi0.8.pial --out_type mgh --regheader $subjfs --interp $intmethod
+	mri_vol2surf --src $src_image --out $out_dir/$mod.$h.equi_intensity_0.9.mgh --hemi $h --surf equi0.9.pial --out_type mgh --regheader $subjfs --interp $intmethod
+	mri_vol2surf --src $src_image --out $out_dir/$mod.$h.equi_intensity_1.0.mgh --hemi $h --surf equi1.0.pial --out_type mgh --regheader $subjfs --interp $intmethod
+	done
+done
